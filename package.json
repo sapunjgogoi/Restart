@@ -1,0 +1,15 @@
+{
+  "name": "restart-focus-mode-lambda",
+  "version": "1.0.0",
+  "description": "AWS Lambda function — secure Gemini API proxy for Restart AI Focus Mode",
+  "main": "focusMode.js",
+  "scripts": {
+    "package": "zip function.zip focusMode.js",
+    "deploy": "aws lambda update-function-code --function-name restart-focus-mode --zip-file fileb://function.zip"
+  },
+  "engines": {
+    "node": ">=20.x"
+  },
+  "dependencies": {},
+  "notes": "No external npm packages needed. Uses Node's built-in https module to keep the deployment ZIP minimal and cold-start fast."
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restart — Regain Your Focus</title>
+  <!-- <link rel="icon" href="/favicon.ico" type="image/x-icon"> -->
+  <!-- <link rel="icon" type="image/png" href="/frontend/favicon.png"> -->
+  <!-- <link rel="icon" type="image/png" href="/favicon.png"> -->
+  <meta name="description" content="A calm mental reset tool for students who need to regain focus while studying." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ─────────────────── MAIN PAGE ─────────────────── -->
+<div class="page">
+
+  <header>
+    <h1 class="logo">Re<span>s</span>tart</h1>
+    <p class="tagline">Pause · Reset · Continue</p>
+  </header>
+
+  <!-- AI Focus Mode CTA -->
+  <div class="focus-cta">
+    <div class="focus-cta-inner">
+      <div class="focus-cta-text">
+        <span class="focus-badge">✦ AI-Powered</span>
+        <p>Get a personalised reset plan for what you're studying right now.</p>
+      </div>
+      <button class="focus-btn" id="btn-focus">
+        <span class="focus-btn-icon">◎</span>
+        Start Focus Mode
+      </button>
+    </div>
+  </div>
+
+  <button class="restart-btn" id="restart-btn">
+    <span class="restart-icon">↺</span>
+    Restart My Focus
+  </button>
+
+  <p class="or-label">or try</p>
+
+  <div class="quick-grid">
+    <button class="quick-btn" id="btn-brain">
+      <span class="q-icon">🧠</span>
+      <span class="q-label">Brain Boost</span>
+      <span class="q-desc">A quick puzzle to spark up your mind</span>
+    </button>
+    <button class="quick-btn" id="btn-fact">
+      <span class="q-icon">💡</span>
+      <span class="q-label">Quick Fact</span>
+      <span class="q-desc">One surprising fact to refresh curiosity</span>
+    </button>
+    <button class="quick-btn" id="btn-breath">
+      <span class="q-icon">🌬️</span>
+      <span class="q-label">Breathe</span>
+      <span class="q-desc">Guided breathing to calm your system</span>
+    </button>
+    <button class="quick-btn" id="btn-tip">
+      <span class="q-icon">📚</span>
+      <span class="q-label">Study Tip</span>
+      <span class="q-desc">A short tip to study smarter</span>
+    </button>
+    <button class="quick-btn" id="btn-activity">
+      <span class="q-icon">🙆</span>
+      <span class="q-label">Mini Reset</span>
+      <span class="q-desc">Stretch, hydrate, or check your posture</span>
+    </button>
+  </div>
+
+</div>
+
+<footer>Restart your focus, then return to learning.</footer>
+
+
+<!-- ─────────────── OVERLAY: AI FOCUS MODE ──────────── -->
+<div class="card-overlay" id="overlay-focus">
+  <div class="card card--focus">
+    <button class="card-close" id="focus-close">✕</button>
+
+    <!-- Step 1: topic input -->
+    <div id="focus-step-input">
+      <span class="card-icon">◎</span>
+      <h2 class="card-title">AI Focus Mode</h2>
+      <p class="card-body">Tell me what you're studying and I'll build a personalised reset plan just for you.</p>
+      <div class="focus-input-wrap">
+        <input
+          type="text"
+          id="focus-topic"
+          class="focus-input"
+          placeholder="e.g. Data Structures, Calculus, Physics…"
+          maxlength="80"
+          autocomplete="off"
+        />
+      </div>
+      <button class="card-btn accent-ai" id="focus-submit">Generate My Reset Plan →</button>
+      <p class="focus-hint">Takes about 3 seconds · Powered by Gemini 2.5 Flash</p>
+    </div>
+
+    <!-- Step 2: loading -->
+    <div id="focus-step-loading" style="display:none">
+      <div class="ai-loader">
+        <div class="ai-loader-ring"></div>
+        <p class="ai-loader-text">Building your reset plan…</p>
+      </div>
+    </div>
+
+    <!-- Step 3: result -->
+    <div id="focus-step-result" style="display:none">
+      <div class="focus-result-header">
+        <span class="focus-result-icon">✦</span>
+        <div>
+          <span class="focus-result-badge">Focus Reset Plan</span>
+          <p class="focus-result-topic" id="focus-result-topic"></p>
+        </div>
+      </div>
+      <div class="focus-result-body" id="focus-result-body"></div>
+      <button class="card-btn accent-ai" id="focus-try-again">Try Another Topic →</button>
+      <button class="card-btn ghost" id="focus-done">I'm ready — back to studying ✓</button>
+    </div>
+
+    <!-- Error state -->
+    <div id="focus-step-error" style="display:none">
+      <span class="card-icon">⚠️</span>
+      <h2 class="card-title">Couldn't connect</h2>
+      <p class="card-body" id="focus-error-msg">Could not reach the Gemini API. Please check your API key in <code>script.js</code>.</p>
+      <button class="card-btn accent-ai" id="focus-error-retry">Try Again</button>
+      <button class="card-btn ghost" id="focus-error-close">Close</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ─────────────── OVERLAY: RANDOM ACTIVITY ────────── -->
+<div class="card-overlay" id="overlay-activity">
+  <div class="card">
+    <button class="card-close" id="act-close-btn" style="display:none">✕</button>
+    <span class="card-icon" id="act-icon">🙆</span>
+    <h2 class="card-title" id="act-title">Quick Reset</h2>
+    <p class="card-body" id="act-body"></p>
+    <div class="timer-bar-wrap">
+      <div class="timer-bar" id="act-timer-bar"></div>
+    </div>
+    <div class="completion-msg" id="act-completion"><p></p></div>
+    <button class="card-btn primary" id="act-done-btn">✓ Done</button>
+  </div>
+</div>
+
+
+<!-- ─────────────── OVERLAY: QUICK FACT ─────────────── -->
+<div class="card-overlay" id="overlay-fact">
+  <div class="card">
+    <button class="card-close" id="fact-close">✕</button>
+    <span class="card-icon">💡</span>
+    <h2 class="card-title">Did You Know?</h2>
+    <div class="fact-display" id="fact-text"></div>
+    <button class="card-btn accent-green" id="fact-next">Another Fact →</button>
+    <button class="card-btn ghost" onclick="document.getElementById('fact-close').click()">Go back to studying</button>
+  </div>
+</div>
+
+
+<!-- ─────────────── OVERLAY: BRAIN BOOST ────────────── -->
+<div class="card-overlay" id="overlay-brain">
+  <div class="card">
+    <span class="card-icon">🧠</span>
+    <h2 class="card-title">Brain Boost</h2>
+    <div id="puzzle-already" style="display:none">
+      <p class="card-body">You already completed your brain boost for this session. 💪<br><br>Your mind is already warmed up — now continue studying!</p>
+    </div>
+    <p class="puzzle-question" id="puzzle-q"></p>
+    <div class="puzzle-options" id="puzzle-options"></div>
+    <div class="puzzle-explanation" id="puzzle-explanation"></div>
+    <button class="card-btn accent-blue" id="puzzle-done-btn">Done</button>
+    <button class="card-btn ghost" id="puzzle-already-close" style="display:none">Back to studying</button>
+  </div>
+</div>
+
+
+<!-- ─────────────── OVERLAY: BREATHING ──────────────── -->
+<div class="card-overlay" id="overlay-breath">
+  <div class="card">
+    <button class="card-close" id="breath-close">✕</button>
+    <span class="card-icon">🌬️</span>
+    <h2 class="card-title">Breathing Reset</h2>
+    <p class="card-body" style="margin-bottom:0">Follow the circle. 3 full cycles, then you're done.</p>
+    <div class="breath-wrap">
+      <div class="breath-circle-outer">
+        <div class="breath-circle" id="breath-circle"></div>
+      </div>
+      <div>
+        <div class="breath-label" id="breath-label">Ready</div>
+        <div class="breath-phase" id="breath-phase"></div>
+      </div>
+      <div class="breath-progress">
+        <div class="breath-dot" data-i="0"></div>
+        <div class="breath-dot" data-i="1"></div>
+        <div class="breath-dot" data-i="2"></div>
+      </div>
+    </div>
+    <div class="completion-msg" id="breath-end">
+      <p>✓ Nervous system calmed. Back to studying you go!</p>
+    </div>
+    <button class="card-btn accent-green" id="breath-start" style="margin-top:16px">Start Breathing</button>
+  </div>
+</div>
+
+
+<!-- ─────────────── OVERLAY: STUDY TIP ──────────────── -->
+<div class="card-overlay" id="overlay-tip">
+  <div class="card">
+    <button class="card-close" id="tip-close">✕</button>
+    <span class="card-icon">📚</span>
+    <span class="tip-badge">Study Tip</span>
+    <h2 class="tip-title" id="tip-title"></h2>
+    <p class="tip-body" id="tip-body"></p>
+    <button class="card-btn accent-blue" id="tip-next">Another Tip →</button>
+    <button class="card-btn ghost" onclick="document.getElementById('tip-close').click()">Got it, back to studying</button>
+  </div>
+</div>
+
+
+<!-- ─────────────── DATA + SCRIPTS ──────────────────── -->
+<script src="data/facts.js"></script>
+<script src="data/tips.js"></script>
+<script src="data/activities.js"></script>
+<script src="data/puzzles.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
